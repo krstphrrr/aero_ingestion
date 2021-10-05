@@ -28,18 +28,19 @@ def txt_read(path) -> pd.DataFrame:
     count = 1
     for i in os.listdir(path):
         #if file is not an excelfile
-        if os.path.splitext(i)[1]!=".xlsx":
+        if os.path.splitext(i)[1]!=".xlsx" and os.path.splitext(i)[1]==".txt":
+            # pass
         # debug block
-        if os.path.splitext(i)[0] in [i for i in testset]:
-            file = os.path.join(path,i)
-            created_time = os.path.getctime(file)
-            parsed_ctime = time.ctime(created_time)
-            date_ctime = datetime.datetime.strptime(parsed_ctime, "%a %b %d %H:%M:%S %Y")
-            # print(date_ctime)
-            complete = os.path.join(path,i)
-            temp = pd.read_table(complete, sep="\t", low_memory=False)
-            df_dict.update({f"df{count}":temp})
-            count+=1
+        # if os.path.splitext(i)[0] in [i for i in testset]:
+        #     file = os.path.join(path,i)
+        #     created_time = os.path.getctime(file)
+        #     parsed_ctime = time.ctime(created_time)
+        #     date_ctime = datetime.datetime.strptime(parsed_ctime, "%a %b %d %H:%M:%S %Y")
+        #     # print(date_ctime)
+        #     complete = os.path.join(path,i)
+        #     temp = pd.read_table(complete, sep="\t", low_memory=False)
+        #     df_dict.update({f"df{count}":temp})
+        #     count+=1
 
         # get date/time for modelrun
             file = os.path.join(path,i)

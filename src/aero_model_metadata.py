@@ -32,7 +32,7 @@ def update_model(path_in_batch,modelrunkey):
     tempdf = template()
 
     # check if table exists
-    if tablecheck("ModelRuns", "aero"):
+    if tablecheck("model_runs", "aero"):
         if modelrun_key_check(modelrunkey):
             print(f"modelrunkey exists, aborting 'ModelRuns' update with ModelRunKey = {modelrunkey}.")
             print("continuing without update..")
@@ -45,7 +45,7 @@ def update_model(path_in_batch,modelrunkey):
 
     # if no, create table and update pg
     else:
-        table_create(tempdf,"ModelRuns","aero")
+        table_create(tempdf,"model_runs","aero")
         add_modelrunkey_to_pg()
         update = read_template(path_in_batch, tempdf)
         # tempdf = read_template(path_in_batch,tempdf)
@@ -66,7 +66,7 @@ def send_model(df):
     """ sends completed dataframe to postgres
     """
     eng = create_engine(engine_conn_string("aero"))
-    df.to_sql(con=eng, name="ModelRuns", if_exists="append", index=False)
+    df.to_sql(con=eng, name="model_runs",schema="aero_data", if_exists="append", index=False)
 
 def template():
     """ creating an empty dataframe with a specific
@@ -99,14 +99,14 @@ def read_template(dir, maindf):
 
 def modelrun_key_check(modelrunkey):
     d = db("aero")
-    if tablecheck("ModelRuns", "aero"):
+    if tablecheck("model_runs", "aero"):
         try:
             con = d.str
             cur = con.cursor()
             exists_query = '''
             select exists (
                 select 1
-                from "ModelRuns"
+                from aero_data."model_runs"
                 where "ModelRunKey" = %s
             )'''
             cur.execute (exists_query, (modelrunkey,))
@@ -123,7 +123,7 @@ def modelrun_key_check(modelrunkey):
 def add_modelrunkey_to_pg():
     d = db("aero")
     add_query = '''
-        ALTER TABLE IF EXISTS "ModelRuns"
+        ALTER TABLE IF EXISTS aero_data."model_runs"
         ADD COLUMN "ModelRunKey" TEXT;
         '''
     try:

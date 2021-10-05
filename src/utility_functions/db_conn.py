@@ -63,7 +63,7 @@ class Acc:
             print(e)
 
 
-def config(filename='src/utils/database.ini', section='postgresql'):
+def config(filename='src/utility_functions/database.ini', section='postgresql'):
     """
     Uses the configpaser module to read .ini and return a dictionary of
     credentials
@@ -116,7 +116,7 @@ class db:
 
             else:
                 self.params = config(section=f'{keyword}')
-                self.params['options'] = "-c search_path=public"
+                self.params['options'] = "-c search_path=aero_data"
                 self.str_1 = SimpleConnectionPool(minconn=1,maxconn=10,**self.params)
                 self.str = self.str_1.getconn()
 

@@ -68,10 +68,10 @@ def sql_command(typedict:{}, name:str, db:str=None):
 
     """
     db_choice={
-    "aero":"aero_data",
+    "aero":"gisdb",
     }
     schema_choice={
-    "aero":"public",
+    "aero":"aero_data",
     }
     inner_list = [f"\"{k}\" {v}" for k,v in typedict.items()]
     part_1 = f""" CREATE TABLE {db_choice[db]}.{schema_choice[db]}.\"{name}\" \
