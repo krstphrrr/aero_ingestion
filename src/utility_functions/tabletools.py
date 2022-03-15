@@ -9,6 +9,22 @@ from src.utility_functions.aero_interfaces import type_translate,aero_translate
 
 """ EXPORTED FUNCTIONS """
 
+def summary_update(summary_path):
+    """
+    summary table ingest, just needs the path to the .txt
+    """
+    d = db('aero')
+    tablename = 'aero_summary'
+    tempdf = pd.read_table(summary_path, sep="\t", low_memory=False)
+    if tablecheck(tablename):
+        ingester.main_ingest(tempdf, tablename,d.str)
+    else:
+        table_create(tempdf, tablename, 'aero')
+        ingester.main_ingest(tempdf, tablename,d.str)
+
+
+
+
 def table_create(df: pd.DataFrame, tablename: str, conn:str=None):
     """
     pulls all fields from dataframe and constructs a postgres table schema;
@@ -29,14 +45,9 @@ def table_create(df: pd.DataFrame, tablename: str, conn:str=None):
         for i in df.columns:
             if tablename!='aero_runs':
                 pass
-                # if ("dima" in conn) or ("dimadev" in conn):
-                #
-                #     print("dima or dimadev")
-                #     table_fields.update({f'{i}':f'{tablefields[possible_tables[tablename]][i]}'})
-                # else:
-                #     print("other schemas")
-                #     table_fields.update({f'{i}':f'{type_translate[df.dtypes[i].name]}'})
                 # table_fields.update({f'{i}':f'{tablefields[possible_tables[tablename]][i]}'})
+            elif tablename=='aero_summary':
+                table_fields.update({f'{i}':f'{aero_translate[df.dtypes[i].name]}'})
             else:
                 print("aero")
                 table_fields.update({f'{i}':f'{aero_translate[df.dtypes[i].name]}'})
@@ -91,13 +102,13 @@ def sql_command(typedict:{}, name:str, db:str=None):
 
 
 
-def tablecheck(tablename, conn="dima"):
+def tablecheck(tablename, conn="aero"):
     """
     receives a tablename and returns true if table exists in postgres table
     schema, else returns false
 
     """
-    tableschema = "dimadev" if conn=="dimadev" else "public"
+    tableschema = "dimadev" if conn=="dimadev" else "aero_data"
     try:
         d = db(f'{conn}')
         con = d.str

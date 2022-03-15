@@ -6,10 +6,11 @@ from src.utility_functions.db_conn import db
 from src.utility_functions.tabletools import table_create, sql_command, tablecheck
 from src.utility_functions.ingestion_script import ingester
 from src.aero_model_metadata import update_model
+from src.utility_functions.aero_interfaces import type_translate,aero_translate
 
 """
 usage example:
-path = r"path/to/NRI_FLUX_OUTPUT"
+# path = r"path/to/NRI_FLUX_OUTPUT"
 
 to check dataframe before ingesting:
 
